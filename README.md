@@ -131,6 +131,3 @@ A linha 1 exibe mensagens em carrossel (rolagem suave). A linha 2 alterna a cada
 - Carregue o código no Arduino.
 - Abra o Monitor Serial em **9600 bps** para acompanhar os logs de média a cada 5 segundos.
 
----
-
-## 📁 Estrutura do Repositório
