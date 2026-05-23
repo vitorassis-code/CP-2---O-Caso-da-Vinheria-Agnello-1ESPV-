@@ -30,7 +30,10 @@
 
 <!-- Cole abaixo o link do seu projeto no Tinkercad, Wokwi ou plataforma similar -->
 
-[🔗(https://wokwi.com/projects/464730814628509697)
+[🔗(https://wokwi.com/projects/464730814628509697) 
+
+
+https://youtu.be/8o0wj9oviiI?feature=shared
 
 ---
 
