@@ -1,93 +1,136 @@
-# CP-2---O-Caso-da-Vinheria-Agnello-1ESPV-
+# 🍷 Vinheria Agnello — Sistema de Monitoramento Ambiental
 
-Sistema de Monitoramento e Alerta Ambiental Automatizado — Vinheria (Fase 2)
-Este projeto consiste em uma solução robusta de computação física desenvolvida em plataforma Arduino para a Vinheria. O objetivo principal é monitorar de forma rigorosa as condições ambientais de armazenamento de vinhos finos (especialmente brancos e espumantes, altamente sensíveis a variações climáticas e luminosas), garantindo a integridade dos vedantes, rótulos e as propriedades orgânicas do líquido.
-
-O sistema faz a leitura em tempo real de Temperatura, Umidade Relativa do Ar e Luminosidade, processa a média matemática móvel dessas variáveis para evitar falsos positivos e aciona um ecossistema de alertas visuais (LEDs), sonoros (Buzzer) e textuais (Display LCD 16x2 I2C).
+> Solução de computação física desenvolvida em Arduino para monitoramento de temperatura, umidade e luminosidade no armazenamento de vinhos finos.
 
 ---
 
-* Arquitetura da Lógica e Desafios de Engenharia
-Ao idealizar este sistema para a Fase 2, precisei resolver três grandes desafios de engenharia de software embarcado para atender às demandas dos proprietários:
+## 👥 Integrantes do Grupo
 
-1. O Desafio da Média Estável vs. Tempo de Resposta
-Os proprietários exigiram que os valores na tela fossem a média de pelo menos 5 leituras a cada 5 segundos.
-A armadilha comum: Ler o sensor dentro de um bloco de 5 segundos faria com que o sistema demorasse 25 segundos para calcular a primeira média.
-A nossa solução: Criamos uma estrutura de dupla temporização com millis() (multitarefa sem travamento). O Arduino colhe uma amostra instantânea a cada 1 segundo e acumula esses dados. Exatamente no quinto segundo, o sistema divide a soma por 5, calcula a média perfeita e atualiza os displays e atuadores instantaneamente.
+| Nome completo | RM |
+|---|---|
+| Vitor Assis |  572192  |
+| Lucas Rodrigues |  571778  |
+| Raul Moreira | 571042 |
+| Vinicius Scalone | 573783 |
 
-2. Transição e Calibração do Sensor
-Substituímos o sensor DHT22 pelo DHT11, adequando a biblioteca para interpretar corretamente o protocolo de comunicação desse hardware específico.
-
-3. Matriz de Prioridade de Alertas (Semáforo e Alarme)
-Diferente da Fase 1 onde as variáveis se misturavam, na Fase 2 a lógica foi isolada. Se a umidade falhar, o alarme vermelho toca; se a temperatura falhar, o alarme amarelo toca; se a luz falhar em nível crítico, o alarme vermelho também toca. O código foi desenhado para que um alerta não "atropele" o outro no display, alternando as informações de forma limpa.
 
 ---
 
-* Requisitos Técnicos de Negócio (A Faixa Ideal)
-Para que o vinho envelheça perfeitamente a cerca de 13°C, o sistema foi calibrado com as seguintes regras estritas:
+## 📸 Foto / Imagem do Projeto
 
--- Luminosidade (Sensor LDR):
+<!-- Substitua o caminho abaixo pela imagem do seu projeto montado -->
+<!-- Exemplo: ![Projeto montado](./imagens/projeto.jpg) -->
 
-Condição Ideal (Escuro/Penumbra): Leituras abaixo de 300. Protege o vinho contra raios ultravioletas que causam reações químicas desagradáveis.
-Condição de Alerta (Meia Luz): Leituras entre 301 e 700. Indica que o ambiente está saindo da penumbra.
-Condição Crítica (Muito Claro): Leituras acima de 700. Ativa imediatamente o alarme visual e sonoro.
+<img width="663" height="393" alt="Captura de tela 2026-05-22 224848" src="https://github.com/user-attachments/assets/ae268991-4dd8-4fa6-9f1c-5e9ec15976f5" />
 
--- Temperatura (Sensor DHT11):
-
-Condição Ideal: Entre 10°C e 15°C. Evita flutuações térmicas maiores que 3°C, que destroem os aromas originais do vinho.
-Condição Crítica (Baixa): Leituras menores que 10°C.
-Condição Crítica (Alta): Leituras maiores que 15°C. Ambas as condições críticas disparam o LED Amarelo e o Buzzer de forma contínua.
-
--- Umidade Relativa do Ar (Sensor DHT11):
-
-Condição Ideal: Entre 50% e 70%. Evita o ressecamento da rolha (oxidação) e o excesso de umidade (proliferação de fungos nos rótulos).
-Condição Crítica (Baixa): Leituras menores que 50%.
-Condição Crítica (Alta): Leituras maiores que 70%. Ambas as condições críticas disparam o LED Vermelho e o Buzzer de forma contínua.
 
 ---
 
-* Hardware Utilizado e Pinagem
--- 1x Arduino Uno (ou compatível)
--- 1x Sensor de Temperatura e Umidade DHT11 (Pino A1)
--- 1x Sensor de Luminosidade LDR (Pino A0)
--- 1x Display LCD 16x2 com Módulo I2C (Pinos SDA/SCL padrões do Arduino)
--- 1x LED Verde — Indicador de Ambiente Seguro (Pino 7)
--- 1x LED Amarelo — Indicador de Alerta de Temperatura / Meia Luz (Pino 6)
--- 1x LED Vermelho — Indicador de Perigo Crítico de Umidade / Luz Alta (Pino 5)
--- 1x Buzzer Ativo — Alarme Sonoro Contínuo (Pino 4)
--- Resistores para o LDR e LEDs, Protoboard e Jumpers.
+## 🔗 Link do Projeto (Simulação) e Do Video explicativo
+
+<!-- Cole abaixo o link do seu projeto no Tinkercad, Wokwi ou plataforma similar -->
+
+[🔗(https://wokwi.com/projects/464730814628509697)
 
 ---
 
-Como Executar o Passo a Passo do Projeto
+## 📋 Descrição do Projeto
 
--- Passo 1: Preparação da IDE do Arduino
+Este projeto consiste em uma solução robusta de computação física para a **Vinheria Agnello**, com o objetivo de monitorar as condições ambientais de armazenamento de vinhos finos — especialmente brancos e espumantes, altamente sensíveis a variações climáticas e luminosas.
 
-Abra a IDE do Arduino.
-Vá em Ferramentas > Gerenciar Bibliotecas...
-Busque por DHT sensor library (da Adafruit) e clique em instalar (instale também a dependência Adafruit Unified Sensor, caso solicitado).
-Busque por LiquidCrystal I2C (do Frank de Brabander) e faça a instalação.
-
--- Passo 2: Montagem do Circuito
-
-Conecte o sensor DHT11 ao pino digital A1 utilizando um resistor pull-up de 4.7k ou 10k Ohms entre o VCC e o pino de dados (caso seu sensor não seja em formato de módulo pronto).
-Monte o circuito do LDR com um divisor de tensão conectado ao pino analógico A0.
-Conecte os LEDs (Verde, Amarelo e Vermelho) nos pinos 7, 6 e 5, respectivamente, utilizando resistores de 220 Ohms em série.
-Conecte o Buzzer ao pino digital 4.
-Conecte as linhas SDA e SCL do display LCD I2C nos pinos correspondentes do seu modelo de Arduino (No Uno, SDA é A4 e SCL é A5).
-
--- Passo 3: Upload e Validação
-
-Conecte o Arduino ao computador.
-Selecione a placa correta e a porta COM em Ferramentas.
-Carregue o código fornecido.
-Abra o Monitor Serial (9600 bps) para acompanhar os relatórios de média matemática calculados a cada 5 segundos e compare com as transições visuais exibidas na tela do LCD.
+O sistema realiza leituras em tempo real de **Temperatura**, **Umidade Relativa do Ar** e **Luminosidade**, processa a **média móvel** dessas variáveis para evitar falsos positivos e aciona um ecossistema de alertas visuais (LEDs), sonoros (Buzzer) e textuais (Display LCD 16x2 I2C).
 
 ---
 
-O Código-Fonte Desenvolvido
-Este código foi corrigido, otimizado e estruturado para evitar o uso de delay(), mantendo o processamento do carrossel do display fluido e as leituras precisas:
+## ⚙️ Requisitos Técnicos — Faixas Ideais de Operação
 
+### 💡 Luminosidade (Sensor LDR)
 
+| Condição | Leitura | Ação do Sistema |
+|---|---|---|
+| ✅ Ideal (Escuro/Penumbra) | Abaixo de 300 | LED Verde |
+| ⚠️ Alerta (Meia Luz) | Entre 301 e 700 | LED Amarelo |
+| 🚨 Crítico (Muito Claro) | Acima de 700 | LED Vermelho + Buzzer |
 
+### 🌡️ Temperatura (Sensor DHT11)
 
+| Condição | Leitura | Ação do Sistema |
+|---|---|---|
+| ✅ Ideal | Entre 10°C e 15°C | LED Verde |
+| 🚨 Crítico (Baixa) | Menor que 10°C | LED Amarelo + Buzzer |
+| 🚨 Crítico (Alta) | Maior que 15°C | LED Amarelo + Buzzer |
+
+### 💧 Umidade Relativa do Ar (Sensor DHT11)
+
+| Condição | Leitura | Ação do Sistema |
+|---|---|---|
+| ✅ Ideal | Entre 50% e 70% | LED Verde |
+| 🚨 Crítico (Baixa) | Menor que 50% | LED Vermelho + Buzzer |
+| 🚨 Crítico (Alta) | Maior que 70% | LED Vermelho + Buzzer |
+
+---
+
+## 🔩 Hardware Utilizado e Pinagem
+
+| Componente | Quantidade | Pino |
+|---|---|---|
+| Arduino Uno | 1x | — |
+| Sensor DHT11 (Temp. e Umidade) | 1x | A1 |
+| Sensor LDR (Luminosidade) | 1x | A0 |
+| Display LCD 16x2 com módulo I2C | 1x | SDA (A4) / SCL (A5) |
+| LED Verde — Ambiente Seguro | 1x | Pino 7 |
+| LED Amarelo — Alerta de Temperatura | 1x | Pino 6 |
+| LED Vermelho — Perigo Crítico | 1x | Pino 5 |
+| Buzzer Ativo — Alarme Sonoro | 1x | Pino 4 |
+| Resistores (220Ω para LEDs, 10kΩ para LDR) | Vários | — |
+| Protoboard e Jumpers | — | — |
+
+---
+
+## 🧠 Arquitetura da Lógica
+
+### 1. Média Estável com Dupla Temporização
+O Arduino colhe **1 amostra por segundo** e acumula os dados. A cada **5 segundos**, calcula a média das últimas 5 leituras e atualiza os alertas — sem uso de `delay()`, mantendo o sistema responsivo.
+
+### 2. Matriz de Prioridade de Alertas (Semáforo)
+- **Umidade crítica** → LED Vermelho + Buzzer intermitente
+- **Temperatura crítica** → LED Amarelo + Buzzer intermitente
+- **Luz crítica (alta)** → LED Vermelho + Buzzer intermitente
+- **Luz em alerta (meia luz)** → LED Amarelo
+- **Tudo OK** → LED Verde
+
+### 3. Display LCD com Carrossel
+A linha 1 exibe mensagens em carrossel (rolagem suave). A linha 2 alterna a cada 3 segundos entre: leituras de umidade/temperatura, status da umidade e status da temperatura.
+
+---
+
+## 📦 Bibliotecas Necessárias
+
+- `DHT sensor library` — Adafruit
+- `Adafruit Unified Sensor` — Adafruit (dependência)
+- `LiquidCrystal I2C` — Frank de Brabander
+
+> Instale via **Ferramentas > Gerenciar Bibliotecas** na IDE do Arduino.
+
+---
+
+## 🚀 Como Executar
+
+**1. Prepare a IDE do Arduino**
+- Instale as bibliotecas listadas acima.
+
+**2. Monte o Circuito**
+- Conecte o DHT11 ao pino A1 (com resistor pull-up de 10kΩ se necessário).
+- Monte o LDR com divisor de tensão no pino A0.
+- Conecte LEDs nos pinos 7, 6 e 5 com resistores de 220Ω.
+- Conecte o Buzzer ao pino 4.
+- Conecte o LCD I2C nos pinos SDA (A4) e SCL (A5).
+
+**3. Faça o Upload**
+- Selecione a placa e porta correta em **Ferramentas**.
+- Carregue o código no Arduino.
+- Abra o Monitor Serial em **9600 bps** para acompanhar os logs de média a cada 5 segundos.
+
+---
+
+## 📁 Estrutura do Repositório
